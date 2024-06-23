@@ -1,16 +1,13 @@
-from ToolBox_functions import ToolBox, DataBase
+from ToolBox_requests import ToolBox
+from ToolBox_DataBase import DataBase
 from threading import Thread
-import os
-from dotenv import load_dotenv
-
-#Загрузка переменных окружения
-dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-load_dotenv(dotenv_path)
 
 #class objects
-tb = ToolBox(os.environ['TOOL_BOX_TG_ID'])
-bot = tb.bot
+tb = ToolBox()
 base = DataBase()
+
+#Bot extern
+bot = tb.bot
 
 #data base init
 base.create()
