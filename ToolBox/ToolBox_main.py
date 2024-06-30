@@ -13,6 +13,14 @@ bot = tb.bot
 base.create()
 db = base.load_data_from_db()
 
+#database print
+def dbprint():
+    for key, val in db.items():
+        s = ''
+        for el in val:
+            s+=f'{el} '
+        print(f"{key}: {s}")
+
 text_buttons = ["text", "images", "comm-text", "smm-text", "brainst-text", "advertising-text", "headlines-text", "seo-text", "email"]
 
 #start
@@ -38,14 +46,14 @@ def handle_query(*call):
         Thread(target=tb.ImageArea, args=call).start()
         db[id][0] = True
         base.insert_or_update_data(id, db[id])
-        print(db)
+        dbprint()
 
     elif call[0].data in text_buttons:
         i = text_buttons.index(call[0].data)
         Thread(target=tb.TextArea, args=(call[0], i-2)).start()
         db[id][i-1] = True
         base.insert_or_update_data(id, db[id])
-        print(db)
+        dbprint()
         
 #text decorate
 @bot.message_handler(content_types=['text'])
@@ -56,13 +64,17 @@ def text_command(*message):
         Thread(target=tb.ImageCommand, args= message).start()
         db[id][0]=False
         base.insert_or_update_data(id, db[id])
-        print(db)
+        dbprint()
     for i in range(len(db[id])):
         if db[id][i]:
             Thread(target=tb.TextCommands, args = (message[0], i-1)).start()
             db[id][i] = False
             base.insert_or_update_data(id, db[id])
-            print(db)
+            dbprint()
 
 #run bot
-bot.infinity_polling()
+if __name__ == "__main__":
+    try:
+        bot.infinity_polling()
+    except Exception as e:
+        pass
